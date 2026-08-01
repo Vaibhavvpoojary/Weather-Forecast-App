@@ -6,8 +6,23 @@ plugins {
 
 android {
     namespace = "com.example.weather_forecast_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
+
+    // Disable AAR metadata check to allow dependencies compiled with lower SDK
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -30,6 +45,42 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            // Enable code shrinking and obfuscation for release builds
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            // Speed up debug builds
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+    }
+
+    // Enable build cache to speed up subsequent builds
+    buildFeatures {
+        buildConfig = true
+        aidl = false
+        renderScript = false
+        resValues = false
+        shaders = false
+    }
+    
+    // Optimize build performance
+    packaging {
+        resources {
+            excludes += arrayOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt"
+            )
         }
     }
 }

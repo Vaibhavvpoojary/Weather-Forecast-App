@@ -2,6 +2,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationService {
+  static final Geocoding _geocoding = Geocoding();
+
   /// Request permission and return the current location
   static Future<Position?> getCurrentLocation() async {
     bool serviceEnabled;
@@ -40,13 +42,17 @@ class LocationService {
     double latitude,
     double longitude,
   ) async {
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      latitude,
-      longitude,
-    );
+    try {
+      List<Placemark> placemarks = await _geocoding.placemarkFromCoordinates(
+        latitude,
+        longitude,
+      );
 
-    if (placemarks.isNotEmpty) {
-      return placemarks.first.locality ?? "Unknown";
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.locality ?? "Unknown";
+      }
+    } catch (e) {
+      print('Error getting city name: $e');
     }
 
     return "Unknown";

@@ -1,92 +1,143 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
-class LocationPermissionScreen extends StatelessWidget {
+import '../../services/location_service.dart';
+import '../home/home_screen.dart';
+
+class LocationPermissionScreen extends StatefulWidget {
   const LocationPermissionScreen({super.key});
+
+  @override
+  State<LocationPermissionScreen> createState() =>
+      _LocationPermissionScreenState();
+}
+
+class _LocationPermissionScreenState
+    extends State<LocationPermissionScreen> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getLocation();
+  }
+
+  Future<void> _getLocation() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Position? position = await LocationService.getCurrentLocation();
+
+    if (position == null) {
+      setState(() {
+        isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Unable to access location. Please enable GPS and grant permission.",
+          ),
+        ),
+      );
+
+      return;
+    }
+
+    String city = await LocationService.getCityName(
+      position.latitude,
+      position.longitude,
+    );
+
+    setState(() {
+      isLoading = false;
+    });
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(
+          city: city,
+          latitude: position.latitude,
+          longitude: position.longitude,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
+      appBar: AppBar(
+        title: const Text("Location"),
+        centerTitle: true,
+      ),
+      body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Location Icon
-              Container(
-                height: 130,
-                width: 130,
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  shape: BoxShape.circle,
+          padding: const EdgeInsets.all(20),
+          child: isLoading
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.location_on,
+                      size: 100,
+                      color: Colors.blue,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      "Enable Location",
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    const Text(
+                      "Mausam+ needs your location to provide accurate weather updates.",
+                      textAlign: TextAlign.center,
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton.icon(
+                        onPressed: _getLocation,
+                        icon: const Icon(Icons.my_location),
+                        label: const Text(
+                          "Use Current Location",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomeScreen(
+                              city: "Unknown",
+                              latitude: 0,
+                              longitude: 0,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text("Skip for Now"),
+                    ),
+                  ],
                 ),
-                child: const Icon(
-                  Icons.location_on,
-                  color: Colors.blue,
-                  size: 70,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              const Text(
-                "Enable Location",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 15),
-
-              const Text(
-                "Mausam+ needs your location to provide accurate weather forecasts and real-time updates.",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                  height: 1.5,
-                ),
-              ),
-
-              const SizedBox(height: 50),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    // TODO:
-                    // Request Location Permission
-                    // Get Current Location
-                    // Navigate to Home Screen
-                  },
-                  icon: const Icon(Icons.my_location),
-                  label: const Text(
-                    "Use Current Location",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              TextButton(
-                onPressed: () {
-                  // TODO:
-                  // Navigate to Home Screen without location
-                },
-                child: const Text(
-                  "Skip for Now",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );
