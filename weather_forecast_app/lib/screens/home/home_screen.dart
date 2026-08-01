@@ -1,139 +1,134 @@
-body: FutureBuilder(
-  future: WeatherService().getCurrentWeather(
-    latitude: latitude,
-    longitude: longitude,
-  ),
-
-  builder: (context, snapshot) {
-
-    if(snapshot.connectionState == ConnectionState.waiting){
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if(snapshot.hasError){
-      return Center(
-        child: Text(snapshot.error.toString()),
-      );
-    }
+import 'package:flutter/material.dart';
+import '../../services/weather_service.dart';
+import '../../widgets/current_weather_card.dart';
+import '../../widgets/weather_details_card.dart';
 
 
-    final weather = snapshot.data!;
+class HomeScreen extends StatelessWidget {
+
+  final String city;
+  final double latitude;
+  final double longitude;
+
+  const HomeScreen({
+    super.key,
+    required this.city,
+    required this.latitude,
+    required this.longitude,
+  });
 
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(20),
+  @override
+  Widget build(BuildContext context) {
 
-      child: Column(
+    return Scaffold(
 
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-
-          Text(
-            "👋 Good Morning, Vaibhav",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold
-            ),
-          ),
+      appBar: AppBar(
+        title: const Text("Mausam+"),
+        centerTitle: true,
+      ),
 
 
-          Text(
-            "📍 ${weather.city}",
-            style: TextStyle(
-              fontSize: 16,
-            ),
-          ),
+      body: FutureBuilder(
+
+        future: WeatherService().getCurrentWeather(
+          latitude: latitude,
+          longitude: longitude,
+        ),
 
 
-          const SizedBox(height:20),
+        builder: (context, snapshot) {
 
 
-          // Main Weather Card
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(25),
+          if(snapshot.connectionState == ConnectionState.waiting){
 
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: Colors.blueAccent,
-            ),
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+
+          }
+
+
+          if(snapshot.hasError){
+
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+              ),
+            );
+
+          }
+
+
+          final weather = snapshot.data!;
+
+
+          return SingleChildScrollView(
+
+            padding: const EdgeInsets.all(20),
+
 
             child: Column(
 
-              children:[
+              crossAxisAlignment: CrossAxisAlignment.start,
+
+
+              children: [
+
 
                 Text(
-                  "🌤",
-                  style: TextStyle(
-                    fontSize:60
+                  "👋 Good Morning, Vaibhav",
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
 
+                const SizedBox(height:5),
+
+
                 Text(
-                  "${weather.temperature}°C",
-                  style: TextStyle(
-                    fontSize:50,
-                    color:Colors.white,
-                    fontWeight:FontWeight.bold
+                  "📍 ${weather.city}",
+                  style: const TextStyle(
+                    fontSize:16,
                   ),
                 ),
 
 
-                Text(
-                  weather.condition,
-                  style: TextStyle(
-                    color:Colors.white,
-                    fontSize:18
-                  ),
-                )
+                const SizedBox(height:25),
+
+
+
+                Center(
+  child: Column(
+    children: [
+
+      CurrentWeatherCard(
+        weather: weather,
+      ),
+
+    ],
+  ),
+),
+
+
+const SizedBox(height:20),
+
+
+WeatherDetailsCard(
+  weather: weather,
+),
+
+
+const SizedBox(height:30),
 
               ],
             ),
-          ),
+          );
 
-
-          SizedBox(height:20),
-
-
-          Text(
-            "Weather Details",
-            style:TextStyle(
-              fontSize:20,
-              fontWeight:FontWeight.bold
-            ),
-          ),
-
-
-          SizedBox(height:10),
-
-
-          Row(
-            mainAxisAlignment:
-            MainAxisAlignment.spaceAround,
-
-            children:[
-
-              Text(
-                "💧\n${weather.humidity}%",
-                textAlign:TextAlign.center,
-              ),
-
-
-              Text(
-                "🌬\n${weather.windSpeed}",
-                textAlign:TextAlign.center,
-              ),
-
-            ],
-          )
-
-        ],
+        },
       ),
     );
-
-  },
-),
+  }
+}
