@@ -67,15 +67,18 @@ class WeatherService {
           .map((item) => ForecastModel.fromJson(item))
           .toList();
 
-      // Filter to show only times from 8 AM to 11 PM
-      List<ForecastModel> filteredForecasts = allForecasts.where((forecast) {
-        DateTime time = DateTime.parse(forecast.time);
-        int hour = time.hour;
-        return hour >= 8 && hour <= 23; // 8 AM to 11 PM
+      // Get current time
+      DateTime now = DateTime.now();
+      
+      // Filter to show only next 24 hours
+      List<ForecastModel> next24Hours = allForecasts.where((forecast) {
+        DateTime forecastTime = DateTime.parse(forecast.time);
+        Duration difference = forecastTime.difference(now);
+        return difference.inHours >= 0 && difference.inHours <= 24;
       }).toList();
 
-      // Return up to 8 items (or fewer if not enough in the time range)
-      return filteredForecasts.take(8).toList();
+      // Return forecasts for next 24 hours
+      return next24Hours;
     } else {
       throw Exception("Failed to load forecast");
     }

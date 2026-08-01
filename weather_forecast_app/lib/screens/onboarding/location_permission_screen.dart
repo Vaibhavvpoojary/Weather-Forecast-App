@@ -5,7 +5,9 @@ import '../../services/location_service.dart';
 import '../home/home_screen.dart';
 
 class LocationPermissionScreen extends StatefulWidget {
-  const LocationPermissionScreen({super.key});
+  final String userName;
+  
+  const LocationPermissionScreen({super.key, required this.userName});
 
   @override
   State<LocationPermissionScreen> createState() =>
@@ -61,6 +63,7 @@ class _LocationPermissionScreenState
           city: city,
           latitude: position.latitude,
           longitude: position.longitude,
+          userName: userName,
         ),
       ),
     );
@@ -123,16 +126,17 @@ class _LocationPermissionScreenState
 
                     TextButton(
                       onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomeScreen(
-                              city: "Unknown",
-                              latitude: 0,
-                              longitude: 0,
-                            ),
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(
+                            city: "Unknown",
+                            latitude: 0,
+                            longitude: 0,
+                            userName: userName,
                           ),
-                        );
+                        ),
+                      );
                       },
                       child: const Text("Skip for Now"),
                     ),

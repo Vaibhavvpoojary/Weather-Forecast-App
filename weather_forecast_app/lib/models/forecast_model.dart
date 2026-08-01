@@ -3,6 +3,7 @@ class ForecastModel {
   final String time;
   final double temperature;
   final String icon;
+  final double rain;
 
 
   ForecastModel({
@@ -12,6 +13,8 @@ class ForecastModel {
     required this.temperature,
 
     required this.icon,
+
+    required this.rain,
 
   });
 
@@ -30,6 +33,10 @@ class ForecastModel {
 
       icon:
       json["weather"][0]["icon"],
+
+      rain: json["rain"] != null 
+          ? (json["rain"]["3h"] ?? 0).toDouble() 
+          : 0.0,
 
     );
 

@@ -21,10 +21,11 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
 
   void _continue() {
     if (_formKey.currentState!.validate()) {
+      String userName = nameController.text.trim();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => const LocationPermissionScreen(),
+          builder: (context) => LocationPermissionScreen(userName: userName),
         ),
       );
     }

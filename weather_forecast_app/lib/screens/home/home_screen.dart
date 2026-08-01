@@ -19,6 +19,7 @@ class HomeScreen extends StatefulWidget {
   final String city;
   final double latitude;
   final double longitude;
+  final String userName;
 
 
   const HomeScreen({
@@ -28,6 +29,7 @@ class HomeScreen extends StatefulWidget {
     required this.city,
     required this.latitude,
     required this.longitude,
+    required this.userName,
 
   });
 
@@ -219,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 Text(
 
-                  "👋 Good Morning, Vaibhav",
+                  "👋 Good Morning, ${widget.userName}",
 
                   style:const TextStyle(
 

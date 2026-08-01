@@ -70,117 +70,107 @@ class HourlyForecast extends StatelessWidget {
 
 
 
-        SizedBox(
-
-  height:150,
-
-
-  child: SizedBox(
-
-  height:150,
-
-
-  child: ListView.builder(
-
-    scrollDirection: Axis.horizontal,
-
-    physics: const BouncingScrollPhysics(),
-
-
-    itemCount: forecast.length,
-
-
-    itemBuilder: (context,index){
-
-
-      final item = forecast[index];
-
-
-      return Container(
-
-        width:120,
-
-        margin: const EdgeInsets.only(right:15),
-
-
-        padding: const EdgeInsets.all(15),
-
-
-        decoration: BoxDecoration(
-
-          borderRadius: BorderRadius.circular(25),
-
-
-          color: Colors.blue.shade50,
-
-
-        ),
-
-
-        child: Column(
-
-          mainAxisAlignment:
-          MainAxisAlignment.center,
-
-
-          children: [
-
-
-            Text(
-
-              formatTime(item.time),
-
-              style: const TextStyle(
-
-                fontSize:14,
-
-                fontWeight:FontWeight.w500,
-
+        // 8 rows × 3 columns grid layout
+        GridView.builder(
+          
+          shrinkWrap: true,
+          
+          physics: const NeverScrollableScrollPhysics(),
+          
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            
+            crossAxisCount: 3, // 3 columns
+            
+            childAspectRatio: 0.85,
+            
+            crossAxisSpacing: 10,
+            
+            mainAxisSpacing: 10,
+            
+          ),
+          
+          itemCount: forecast.length,
+          
+          itemBuilder: (context, index){
+          
+            final item = forecast[index];
+          
+            return Container(
+          
+              padding: const EdgeInsets.all(10),
+          
+              decoration: BoxDecoration(
+          
+                borderRadius: BorderRadius.circular(20),
+          
+                color: Colors.blue.shade50,
+          
               ),
-
-            ),
-
-
-
-            Image.network(
-
-              "https://openweathermap.org/img/wn/${item.icon}@2x.png",
-
-              width:50,
-
-            ),
-
-
-
-            Text(
-
-              "${item.temperature.round()}°",
-
-              style: const TextStyle(
-
-                fontSize:22,
-
-                fontWeight:FontWeight.bold,
-
+          
+              child: Column(
+          
+                mainAxisAlignment: MainAxisAlignment.center,
+          
+                children: [
+          
+          
+                  Text(
+          
+                    formatTime(item.time),
+          
+                    style: const TextStyle(
+          
+                      fontSize:12,
+          
+                      fontWeight:FontWeight.w500,
+          
+                    ),
+          
+                  ),
+          
+          
+                  Image.network(
+          
+                    "https://openweathermap.org/img/wn/${item.icon}@2x.png",
+          
+                    width:40,
+          
+                  ),
+          
+          
+                  Text(
+          
+                    "${item.temperature.round()}°",
+          
+                    style: const TextStyle(
+          
+                      fontSize:18,
+          
+                      fontWeight:FontWeight.bold,
+          
+                    ),
+          
+                  ),
+          
+                  // Display rain amount if greater than 0
+                  if (item.rain > 0)
+                    Text(
+                      "💧 ${item.rain.toStringAsFixed(1)}mm",
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: Colors.blue,
+                      ),
+                    ),
+          
+                ],
+          
               ),
-
-            ),
-
-
-          ],
-
+          
+            );
+          
+          },
+          
         ),
-
-      );
-
-
-    },
-
-  ),
-
-)
-
-),
 
       ],
 
