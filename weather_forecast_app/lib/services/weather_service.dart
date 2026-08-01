@@ -45,59 +45,40 @@ class WeatherService {
   // ADD FORECAST METHOD HERE 👇
 
   Future<List<ForecastModel>> getHourlyForecast({
-
     required double latitude,
-
     required double longitude,
-
   }) async {
-
-
     final url = Uri.parse(
-
       "${AppConstants.baseUrl}/forecast"
-
       "?lat=$latitude"
-
       "&lon=$longitude"
-
       "&appid=${AppConstants.apiKey}"
-
-      "&units=metric"
-
+      "&units=metric",
     );
-
 
     final response = await http.get(url);
 
-
-
-    if(response.statusCode == 200){
-
-
+    if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-
-
       List list = data["list"];
 
-
-      return list
-          .take(8)
-          .map(
-            (item)=>ForecastModel.fromJson(item),
-          )
+      // Convert to ForecastModel list
+      List<ForecastModel> allForecasts = list
+          .map((item) => ForecastModel.fromJson(item))
           .toList();
 
+      // Filter to show only times from 8 AM to 11 PM
+      List<ForecastModel> filteredForecasts = allForecasts.where((forecast) {
+        DateTime time = DateTime.parse(forecast.time);
+        int hour = time.hour;
+        return hour >= 8 && hour <= 23; // 8 AM to 11 PM
+      }).toList();
 
-    }
-
-    else{
-
+      // Return up to 8 items (or fewer if not enough in the time range)
+      return filteredForecasts.take(8).toList();
+    } else {
       throw Exception("Failed to load forecast");
-
     }
-
-
   } // END forecast method
 
 } // WeatherService class ends here

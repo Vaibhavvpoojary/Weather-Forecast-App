@@ -72,101 +72,115 @@ class HourlyForecast extends StatelessWidget {
 
         SizedBox(
 
-          height:130,
+  height:150,
 
 
-          child: ListView.builder(
+  child: SizedBox(
 
-            scrollDirection: Axis.horizontal,
-
-
-            itemCount: forecast.length,
+  height:150,
 
 
-            itemBuilder:(context,index){
+  child: ListView.builder(
+
+    scrollDirection: Axis.horizontal,
+
+    physics: const BouncingScrollPhysics(),
 
 
-              final item = forecast[index];
+    itemCount: forecast.length,
 
 
-              return Container(
-
-                width:90,
-
-                margin: const EdgeInsets.only(right:12),
+    itemBuilder: (context,index){
 
 
-                padding: const EdgeInsets.all(12),
+      final item = forecast[index];
 
 
-                decoration: BoxDecoration(
+      return Container(
 
-                  borderRadius:
-                  BorderRadius.circular(20),
+        width:120,
 
-                  color: Colors.blue.shade50,
-
-                ),
+        margin: const EdgeInsets.only(right:15),
 
 
-                child: Column(
-
-                  mainAxisAlignment:
-                  MainAxisAlignment.center,
+        padding: const EdgeInsets.all(15),
 
 
-                  children: [
+        decoration: BoxDecoration(
+
+          borderRadius: BorderRadius.circular(25),
 
 
-                    Text(
-
-                      formatTime(item.time),
-
-                      style:
-                      const TextStyle(
-                        fontSize:14,
-                      ),
-
-                    ),
+          color: Colors.blue.shade50,
 
 
-                    Image.network(
-
-                      "https://openweathermap.org/img/wn/${item.icon}@2x.png",
-
-                      width:45,
-
-                    ),
+        ),
 
 
+        child: Column(
 
-                    Text(
+          mainAxisAlignment:
+          MainAxisAlignment.center,
 
-                      "${item.temperature.round()}°",
 
-                      style:
-                      const TextStyle(
+          children: [
 
-                        fontWeight:
-                        FontWeight.bold,
 
-                        fontSize:18,
+            Text(
 
-                      ),
+              formatTime(item.time),
 
-                    ),
+              style: const TextStyle(
 
-                  ],
+                fontSize:14,
 
-                ),
+                fontWeight:FontWeight.w500,
 
-              );
+              ),
 
-            },
+            ),
 
-          ),
 
-        )
+
+            Image.network(
+
+              "https://openweathermap.org/img/wn/${item.icon}@2x.png",
+
+              width:50,
+
+            ),
+
+
+
+            Text(
+
+              "${item.temperature.round()}°",
+
+              style: const TextStyle(
+
+                fontSize:22,
+
+                fontWeight:FontWeight.bold,
+
+              ),
+
+            ),
+
+
+          ],
+
+        ),
+
+      );
+
+
+    },
+
+  ),
+
+)
+
+),
 
       ],
 
