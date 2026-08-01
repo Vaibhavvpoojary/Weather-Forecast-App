@@ -13,7 +13,6 @@ class WeatherDetailsCard extends StatelessWidget {
   });
 
 
-
   Widget detailItem(
       String icon,
       String title,
