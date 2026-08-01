@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import '../onboarding/user_details_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,9 +18,12 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       const Duration(seconds: 3),
       () {
-
-        // Navigate to User Details Screen
-
+        Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+        builder: (context) => const UserDetailsScreen(),
+  ),
+);
       },
     );
   }
