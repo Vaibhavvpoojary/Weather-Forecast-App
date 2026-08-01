@@ -63,7 +63,7 @@ class _LocationPermissionScreenState
           city: city,
           latitude: position.latitude,
           longitude: position.longitude,
-          userName: userName,
+          userName: widget.userName,
         ),
       ),
     );
@@ -133,7 +133,7 @@ class _LocationPermissionScreenState
                             city: "Unknown",
                             latitude: 0,
                             longitude: 0,
-                            userName: userName,
+                            userName: widget.userName,
                           ),
                         ),
                       );
